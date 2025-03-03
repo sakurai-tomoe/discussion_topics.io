@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap');
+    
+    /* Reset and Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #F4F4F8;
+      color: #2D2D3A;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.6;
+    }
+    
+    /* Color Variables */
+    :root {
+      /* Gradients */
+      --gradient-sunset: linear-gradient(135deg, #FF5E62, #FF9966);
+      --gradient-neon: linear-gradient(135deg, #43CBFF, #9708CC);
+      --gradient-peach: linear-gradient(135deg, #EECDA3, #EF629F);
+      
+      /* Solid Colors */
+      --color-red: #FF5E62;
+      --color-orange: #FF9966;
+      --color-blue: #43CBFF;
+      --color-purple: #9708CC;
+      
+      /* Neutral Colors */
+      --color-dark: #1B1B25;
+      --color-soft-black: #2D2D3A;
+      --color-grey: #8B8B9A;
+      --color-light: #F4F4F8;
+      
+      /* Shadows */
+      --shadow-sm: 0 4px 8px rgba(0,0,0,0.05);
+      --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 15px 30px rgba(0,0,0,0.1);
+      --shadow-red: 0 10px 20px rgba(255,94,98,0.3);
+      --shadow-blue: 0 10px 20px rgba(67,203,255,0.3);
+      --shadow-purple: 0 10px 20px rgba(151,8,204,0.3);
+    }
+    
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 0;
+      line-height: 1.2;
+    }
+    
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+    }
+    
+    h2 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    
+    h3 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 0 0 16px;
+    }
+    
+    .display-title {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      background: var(--gradient-sunset);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    
+    .gradient-text-sunset {
+      background: var(--gradient-sunset);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .gradient-text-neon {
+      background: var(--gradient-neon);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .gradient-text-peach {
+      background: var(--gradient-peach);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .caption {
+      font-size: 14px;
+      color: var(--color-grey);
+      font-style: italic;
+    }
+    
+    .highlight {
+      position: relative;
+      font-weight: 500;
+      z-index: 1;
+    }
+    
+    .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(transparent 60%, rgba(255,153,102,0.4) 40%);
+      z-index: -1;
+    }
+    
+    /* Slides Container */
+    .slides-container {
+      width: 900px;
+      max-width: 900px;
+      margin: 20px auto;
+      box-shadow: var(--shadow-lg);
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+    
+    /* Individual Slide */
+    .slide {
+      width: 100%;
+      height: 720px;
+      background: white;
+      padding: 0;
+      box-sizing: border-box;
+      display: none;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .slide.active {
+      display: flex;
+    }
+    
+    .slide-header {
+      background: var(--gradient-sunset);
+      padding: 20px 30px;
+      margin-bottom: 0;
+      color: white;
+    }
+    
+    .slide-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+    
+    .slide-subtitle {
+      font-size: 20px;
+      margin: 8px 0 0 0;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+    
+    .slide-content {
+      flex: 1;
+      padding: 25px 30px;
+      overflow: auto;
+    }
+    
+    .slide-footer {
+      font-size: 14px;
+      color: var(--color-grey);
+      background: rgba(255,255,255,0.8);
+      padding: 5px 15px;
+      border-radius: 15px;
+      position: absolute;
+      bottom: 15px;
+      right: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    /* Lists */
+    ul, ol {
+      margin-left: 10px;
+      padding-left: 20px;
+    }
+    
+    li {
+      margin-bottom: 12px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .card h3 {
+      margin-top: 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      color: var(--color-soft-black);
+    }
+    
+    .card h3 svg {
+      margin-right: 10px;
+    }
+    
+    /* Layout Components */
+    .split-content {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 20px;
+      gap: 20px;
+    }
+    
+    .column {
+      width: 48%;
+    }
+    
+    /* Icon Containers */
+    .icon-container {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 35px;
+      height: 35px;
+      background: rgba(67,203,255,0.1);
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    /* Process Flow */
+    .process-flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 30px 0;
+      position: relative;
+    }
+    
+    .process-step {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      width: 26%;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s;
+    }
+    
+    .process-step:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .process-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px auto;
+    }
+    
+    .process-line {
+      height: 3px;
+      background: #e0e0e0;
+      flex-grow: 1;
+      position: relative;
+      z-index: 0;
+    }
+    
+    .process-line::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: -8px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 12px solid #e0e0e0;
+    }
+    
+    /* Timeline */
+    .timeline {
+      position: relative;
+      margin: 30px 10px;
+      padding-top: 20px;
+    }
+    
+    .timeline-line {
+      height: 4px;
+      background: linear-gradient(to right, #e0e0e0, var(--color-blue), var(--color-orange));
+      position: relative;
+      margin: 35px 0;
+      border-radius: 2px;
+    }
+    
+    .timeline-marker {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      top: -14px;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+      background: white;
+    }
+    
+    .timeline-label {
+      position: absolute;
+      transform: translateX(-50%);
+      text-align: center;
+      width: 100px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .timeline-focus {
+      position: absolute;
+      width: 160px;
+      text-align: center;
+      transform: translateX(-50%);
+      padding: 12px;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* Concept Visualization */
+    .concept-circles {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+      position: relative;
+    }
+    
+    .concept-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: 500;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+      z-index: 1;
+    }
+    
+    .circle-left {
+      background: var(--gradient-neon);
+      margin-right: -15px;
+    }
+    
+    .circle-right {
+      background: var(--gradient-sunset);
+      margin-left: -15px;
+    }
+    
+    /* Venn Diagram */
+    .venn-diagram {
+      position: relative;
+      height: 250px;
+      margin: 20px 0 40px 0;
+    }
+    
+    .venn-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      color: white;
+      font-weight: 500;
+      opacity: 0.9;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .venn-left {
+      left: 25%;
+      transform: translateX(-50%);
+      background: var(--gradient-sunset);
+      z-index: 1;
+    }
+    
+    .venn-right {
+      left: 75%;
+      transform: translateX(-50%);
+      background: var(--gradient-neon);
+      z-index: 1;
+    }
+    
+    .venn-intersection {
+      left: 50%;
+      transform: translateX(-50%);
+      top: 60px;
+      width: 150px;
+      height: 150px;
+      background: white;
+      color: var(--color-soft-black);
+      border-radius: 12px;
+      z-index: 2;
+      font-size: 14px;
+      box-shadow: var(--shadow-lg);
+      border: 2px solid var(--color-orange);
+      position: absolute;
+    text-align: center;
+    }
+    
+    /* Collaboration Diagram */
+    .collaboration-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 25px 0;
+    }
+    
+    .collab-element {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      width: 200px;
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s;
+    }
+    
+    .collab-element:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .collab-plus, .collab-equals {
+      margin: 0 15px;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--color-grey);
+      z-index: 1;
+    }
+    
+    .collab-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    
+    .collab-text {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    /* Button Styles */
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    
+    .control-btn {
+      background: var(--gradient-sunset);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      margin: 0 10px;
+      cursor: pointer;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 500;
+      box-shadow: var(--shadow-red);
+      transition: all 0.3s;
+    }
+    
+    .control-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(255,94,98,0.4);
+    }
+    
+    .control-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+    
+    /* Career Path */
+    .career-path {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      margin: 30px 0;
+      gap: 15px;
+    }
+    
+    .career-stage {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .career-stage:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .career-icon {
+      margin-bottom: 15px;
+    }
+    
+    .career-title {
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    .career-content {
+      font-size: 14px;
+      line-height: 1.5;
+      flex-grow: 1;
+    }
+    
+    .career-accent {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+    }
+    
+    /* Topic Groups */
+    .topic-groups {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .topic-group {
+      flex: 1 1 45%;
+      min-width: 250px;
+      background: white;
+      border-radius: 12px;
+      padding: 0;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .topic-group:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .topic-header {
+      padding: 15px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .topic-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    .topic-title {
+      font-weight: 700;
+      font-size: 16px;
+      margin: 0;
+    }
+    
+    .topic-items {
+      padding: 0 15px 15px 15px;
+    }
+    
+    .topic-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    .topic-status {
+      flex-shrink: 0;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+      font-weight: 500;
+    }
+    
+    .status-done {
+      background: #e6f9f1;
+      color: #36b37e;
+    }
+    
+    .status-partial {
+      background: #fff5e6;
+      color: #ff9f43;
+    }
+    
+    /* Custom Background Styles */
+    .bg-gradient-sunset {
+      background: linear-gradient(135deg, rgba(255,94,98,0.1), rgba(255,153,102,0.1));
+    }
+    
+    .bg-gradient-neon {
+      background: linear-gradient(135deg, rgba(67,203,255,0.1), rgba(151,8,204,0.1));
+    }
+    
+    .bg-gradient-peach {
+      background: linear-gradient(135deg, rgba(238,205,163,0.1), rgba(239,98,159,0.1));
+    }
+    
+    
+    .gradient-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px; /* 境界線の太さ */
+  height: 100%;
+  background: linear-gradient(to bottom, var(--color-red), var(--color-orange));
+}
+    
+    /* Custom accent colors */
+    .accent-sunset {
+      background: var(--gradient-sunset);
+    }
+    
+    .accent-neon {
+      background: var(--gradient-neon);
+    }
+    
+    .accent-peach {
+      background: var(--gradient-peach);
+    }
+    
+    .header-icon {
+      margin-right: 10px;
+    }
+    
+    .note {
+      font-size: 14px;
+      color: var(--color-grey);
+      font-style: italic;
+      margin-top: 20px;
+      background: var(--color-light);
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+    
+    /* Approach Cards */
+    .approach-cards {
+      display: flex;
+      justify-content: space-between;
+      margin: 25px 0;
+      gap: 20px;
+    }
+    
+    .approach-card {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .approach-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .approach-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .approach-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 12px;
+    }
+    
+    .approach-title {
+      font-weight: 700;
+      font-size: 18px;
+      margin: 0;
+    }
+    
+    /* AI Evolution */
+    .ai-evolution {
+      display: flex;
+      align-items: stretch;
+      margin: 25px 0;
+      gap: 30px;
+    }
+    
+    .ai-stage {
+      flex: 1;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    
+    .ai-stage:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .ai-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .ai-icon {
+      margin-right: 12px;
+    }
+    
+    .ai-title {
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .ai-content ul {
+      margin: 0;
+      padding-left: 15px;
+    }
+    
+    .ai-content li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .ai-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--color-grey);
+      transform: scale(1.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="slides-container">
+    <!-- スライド1: 表紙 -->
+    <div class="slide active" id="slide1">
+      <div class="slide-header">
+        <h1 class="slide-title">本日の相談事項</h1>
+        <h2 class="slide-subtitle">プロジェクト方針と協業スタイルについて</h2>
+      </div>
+      <div class="slide-content">
+        <h2 style="display: flex; align-items: center; margin-top: 10px;">
+          <svg width="24" height="24" class="header-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 4H21V6H3V4ZM5 19H19V12H5V19ZM5 10H19V8H5V10Z" fill="#FF5E62"/>
+          </svg>
+          目次
+        </h2>
+        <div class="card gradient-border">
+          <strong class="gradient-text-sunset">1. AI活用プロジェクトの方針と提案</strong> 
+          <div style="font-size: 14px; margin-top: 5px; color: var(--color-grey);">
+            現状の懸念点と提案
+          </div>
+        </div>
+        <div class="card gradient-border">
+          <strong class="gradient-text-sunset">2. 私たちの思考アプローチの違いと協業方法</strong> 
+          <div style="font-size: 14px; margin-top: 5px; color: var(--color-grey);">
+            思考法の違いの共有と協業スタイルの検討
+          </div>
+        </div>
+        <div class="card gradient-border">
+          <strong class="gradient-text-sunset">3. 最近のAI観と今後のキャリア</strong>
+          <div style="font-size: 14px; margin-top: 5px; color: var(--color-grey);">
+            AI活用の未来像と自身のキャリアビジョン
+          </div>
+        </div>
+        
+        <div class="note" style="display: flex; align-items: flex-start;">
+          <svg width="24" height="24" style="margin-right: 10px; flex-shrink: 0;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z" fill="#8B8B9A"/>
+          </svg>
+          <div>
+            <p>※今日は特に(1)と(2)に焦点を当てます</p>
+            <p>・AIプロジェクトは初期段階で方針を決める時期</p>
+            <p>・思考アプローチの違いは役割分担を明確にして成果を上げるために重要</p>
+            <p>・AI観は後日レクチャー会の後に詳しく議論予定</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">1 / 10</div>
+    </div>
+
+    <!-- スライド2: AI活用プロジェクト (現状と懸念) -->
+    <div class="slide" id="slide2">
+      <div class="slide-header">
+        <h1 class="slide-title">1. AI活用プロジェクト</h1>
+        <h2 class="slide-subtitle">現状分析と懸念点</h2>
+      </div>
+      <div class="slide-content">
+        <div class="split-content">
+          <div class="column">
+            <div class="card">
+              <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--gradient-sunset);"></div>
+              <h3>
+                <div class="icon-container" style="background: rgba(255,94,98,0.1);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11H7v2h4v4h2v-4h4v-2h-4V7h-2v4z" fill="#FF5E62"/>
+                  </svg>
+                </div>
+                現状
+              </h3>
+              <ul>
+                <li>メンバーと方針のみ決定済み</li>
+                <li>取締役の目的：<br>コンテンツ制作部門のコストカット<br>（自動生成etc）</li>
+              </ul>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--gradient-neon);"></div>
+              <h3>
+                <div class="icon-container" style="background: rgba(67,203,255,0.1);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z" fill="#43CBFF"/>
+                  </svg>
+                </div>
+                懸念点
+              </h3>
+              <ul>
+                <li>コンテンツ劣化によるブランドの毀損</li>
+                <li>トレードオフとなる能力のリスク</li>
+                <li>アイデンティティ・クライシスによるハレーション</li>
+                <li>精度が中途半端になるリスク</li>
+                <li>桜井の工数と能力不足</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- プロジェクトの流れを図式化 -->
+        <div class="process-flow">
+          <div class="process-step">
+            <div class="process-icon" style="background: linear-gradient(135deg, #F5F7FA, #E5E9F2);">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11H7v2h4v4h2v-4h4v-2h-4V7h-2v4z" fill="#666"/>
+              </svg>
+            </div>
+            <strong>現状</strong><br>
+            <div style="font-size: 14px; margin-top: 5px;">
+              自動生成による<br>コストカット
+            </div>
+          </div>
+          <div class="process-line"></div>
+          <div class="process-step">
+            <div class="process-icon" style="background: linear-gradient(135deg, #E0ECFF, #C9D9FD);">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 17h2v2H2v-2h2v-7a8 8 0 1116 0v7zm-2 0v-7a6 6 0 10-12 0v7h12zm-9 4h6v2H9v-2z" fill="#43CBFF"/>
+              </svg>
+            </div>
+            <strong>提案</strong><br>
+            <div style="font-size: 14px; margin-top: 5px;">
+              レクチャー会と<br>午來さんの活用
+            </div>
+          </div>
+          <div class="process-line"></div>
+          <div class="process-step">
+            <div class="process-icon" style="background: linear-gradient(135deg, #E6F9F1, #D4F4E6);">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 10h7l-9 13v-9H4l9-13z" fill="#36B37E"/>
+              </svg>
+            </div>
+            <strong>目標</strong><br>
+            <div style="font-size: 14px; margin-top: 5px;">
+              新しい価値創出と<br>精度向上
+            </div>
+          </div>
+        </div>
+        
+        <div class="card bg-gradient-sunset" style="border-left: 4px solid var(--color-red);margin-top: 110px;">
+          <h3 style="display: flex; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z" fill="#FF5E62"/>
+            </svg>
+            <span style="margin-left: 10px;">重要ポイント</span>
+          </h3>
+          <p>この段階でどう進めるかが<span class="highlight">成果を左右</span>します。</p>
+          <p>アサインされた意図は、AIに詳しく精度を上げられる人材としての期待だと考えています。<br/>その期待に答えるソリューションとしてレクチャー会と午來さんの登用を提案します。</p>
+        </div>
+      </div>
+      <div class="slide-footer">2 / 10</div>
+    </div>
+
+    <!-- スライド3: AI活用プロジェクト (提案①) -->
+    <div class="slide" id="slide3">
+      <div class="slide-header">
+        <h1 class="slide-title">1. AI活用プロジェクト</h1>
+        <h2 class="slide-subtitle">提案① レクチャー会の実施</h2>
+      </div>
+      <div class="slide-content">
+        <div class="card" style="border-left: 4px solid var(--color-blue);">
+          <h3>
+            <div class="icon-container" style="background: rgba(67,203,255,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z" fill="#43CBFF"/>
+              </svg>
+            </div>
+            レクチャー会の概要
+          </h3>
+          <div class="split-content" style="margin-top: -20px;">
+            <div class="column">
+              <p style="margin: 0 0 10px 0; display: flex; align-items: center;">
+                <svg width="18" height="18" style="margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 1v2h6V1h2v2h4a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1h4V1h2zm11 9H4v9h16v-9zm-15-5H4v3h16V5h-3v1h-2V5H9v1H7V5z" fill="#43CBFF"/>
+                </svg>
+                <strong>時期：</strong>来週
+              </p>
+              <p style="margin: 0 0 10px 0; display: flex; align-items: center;">
+                <svg width="18" height="18" style="margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-5-8h2a3 3 0 006 0h2a5 5 0 11-10 0z" fill="#43CBFF"/>
+                </svg>
+                <strong>時間：</strong>90分程度
+              </p>
+            </div>
+            <div class="column">
+             
+              <p style="margin: 0 0 10px 0; display: flex; align-items: center;">
+                <svg width="18" height="18" style="margin-right: 8px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 3a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1h18zm-1 2H4v14h16V5zM8 7v2H6V7h2zm0 4v2H6v-2h2zm0 4v2H6v-2h2zm8-8v2h-6V7h6zm0 4v2h-6v-2h6zm0 4v2h-6v-2h6z" fill="#43CBFF"/>
+                </svg>
+                <strong>内容：</strong>現在のAI事情と未来予測
+              </p>
+            </div>
+          </div>
+          
+        </div>
+        <div class="card" style="border-left: 4px solid var(--color-blue); margin-top: 20px;">
+          <h3 style="display: flex; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 22a8 8 0 1116 0h-2a6 6 0 10-12 0H4zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6z" fill="#43CBFF"/>
+            </svg>
+            <span style="margin-left: 10px;">レクチャー会講師プロフィール</span>
+          </h3>
+          <div style="margin-top: 5px;">
+            <p><strong>渡部健太</strong>　26歳</p>
+            <p>東京農工大学大学院電気電子工学専攻中退</p>
+            <p>現在LLMを用いた製造業向けの会社を立ち上げ中</p>
+            <p style="margin-top: 10px;"><strong>生成AI関連の活動</strong></p>
+            <ul style="margin-top: 5px;">
+              <li>2022年2月対話システムライブコンペティション5で５位入賞</li>
+              <li>2022年10月NTTファイナンシャルグループ企業にセミナー実施</li>
+              <li>2023年４月CIC主催プロンプトソンで優秀賞獲得</li>
+            </ul>
+          </div>
+        </div>
+        <!-- レクチャー会の効果を図式化 -->
+        <div class="concept-circles">
+          <div class="concept-circle circle-left">
+            <div class="concept-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 16V13H8V11H11V8H13V11H16V13H13V16H11Z" fill="white"/>
+              </svg>
+            </div>
+            現状の知見<br>
+            コストカット<br>
+            自動生成
+          </div>
+          <div class="concept-circle circle-right">
+            <div class="concept-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 10h7l-9 13v-9H4l9-13z" fill="white"/>
+              </svg>
+            </div>
+            レクチャー会後<br>
+            新しい可能性<br>
+            効率化手法<br>
+            価値創造
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">3 / 10</div>
+    </div>
+
+    <!-- スライド4: AI活用プロジェクト (提案②) -->
+    <div class="slide" id="slide4">
+      <div class="slide-header">
+        <h1 class="slide-title">1. AI活用プロジェクト</h1>
+        <h2 class="slide-subtitle">提案② 午來さんの活用</h2>
+      </div>
+      <div class="slide-content">
+        <div class="split-content">
+          <div class="column">
+            <div class="card">
+              <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--gradient-neon);"></div>
+              <h3>
+                <div class="icon-container" style="background: rgba(67,203,255,0.1);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z" fill="#43CBFF"/>
+                  </svg>
+                </div>
+                現状の課題
+              </h3>
+              <ul>
+                <li>雑務に埋もれている状態
+                  <ul>
+                    <li>Slackのやり取りを分析すると、コンテキスト読み取り能力に課題</li>
+                    <li>フォロー体制も不十分</li>
+                  </ul>
+                </li>
+                <li>ポテンシャルが活かされていない</li>
+              </ul>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--gradient-sunset);"></div>
+              <h3>
+                <div class="icon-container" style="background: rgba(255,94,98,0.1);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11H7v2h4v4h2v-4h4v-2h-4V7h-2v4z" fill="#FF5E62"/>
+                  </svg>
+                </div>
+                隠れた強み
+              </h3>
+              <ul>
+                <li><span class="highlight">トップレベルのゲーマー</span>
+                  <ul>
+                    <li>AIのデータ最適化 ≒ ゲームのパラメータ調整</li>
+                    <li>ゲーマーはAIとの相性が良い</li>
+                    <li>レクチャー会の知人も同様の特性</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 午來さんの活用を図式化 -->
+        <div class="venn-diagram">
+          <div class="venn-circle venn-left">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 10px;">
+              <path d="M17 4a6 6 0 016 6v4a6 6 0 01-6 6H7a6 6 0 01-6-6v-4a6 6 0 016-6h10zm0 2H7a4 4 0 00-4 4v4a4 4 0 004 4h10a4 4 0 004-4v-4a4 4 0 00-4-4zM5 8h2a1 1 0 110 2H5a1 1 0 110-2zm0 3h2a1 1 0 110 2H5a1 1 0 110-2zm0 3h2a1 1 0 110 2H5a1 1 0 110-2zm8-6h6a1 1 0 110 2h-6a1 1 0 110-2zm0 3h6a1 1 0 110 2h-6a1 1 0 110-2zm0 3h6a1 1 0 110 2h-6a1 1 0 110-2z" fill="white"/>
+            </svg>
+            ゲーマーの<br>スキル<br>
+            パラメータ調整<br>
+            最適化思考
+          </div>
+          <div class="venn-circle venn-right">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 10px;">
+              <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zM10.622 8.415l4.879 3.252a.4.4 0 01.15.547l-4.142 6.213a.4.4 0 01-.548.15l-.737-.492a.4.4 0 01-.15-.547l3.247-4.87-3.398-2.266a.4.4 0 01-.15-.547l.492-.737a.4.4 0 01.547-.15l.01.006-.01-.006z" fill="white"/>
+            </svg>
+            AIプロジェクト<br>
+            データ最適化<br>
+            精度向上
+          </div>
+          <div class="venn-intersection">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 5px;">
+              <path d="M4 22a8 8 0 1116 0h-2a6 6 0 10-12 0H4zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" fill="#FF9966"/>
+            </svg>
+            午來さんの<br>ポテンシャル<br><br>
+            週〇〇時間の<br>プロジェクト参加
+          </div>
+        </div>
+        
+        <div class="card bg-gradient-neon" style="border-left: 4px solid var(--color-blue);">
+          <h3 style="display: flex; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1.177-7.86l-2.765-2.767L7 12.431l3.823 3.827 7.173-7.172-1.060-1.057-7.113 7.113z" fill="#43CBFF"/>
+            </svg>
+            <span style="margin-left: 10px;">具体的プラン</span>
+          </h3>
+          <ul>
+            <li>週〇〇時間ほどプロジェクトに参加</li>
+            <li>雑務から解放し、AIスキル向上の機会に</li>
+            <li><span class="highlight">私以上のポテンシャルを発揮</span>できる可能性</li>
+            <li>将来的なAI人材育成の観点からも理にかなう</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">4 / 10</div>
+    </div>
+
+    <!-- スライド5: 思考アプローチの違い (概要) -->
+    <div class="slide" id="slide5">
+      <div class="slide-header">
+        <h1 class="slide-title">2. 思考アプローチの違い</h1>
+        <h2 class="slide-subtitle">私たちのアプローチと相乗効果</h2>
+      </div>
+      <div class="slide-content">
+        <div class="approach-cards" style="flex-direction: row-reverse;">
+          <div class="approach-card bg-gradient-neon">
+            <div class="approach-header">
+              <div class="approach-icon" style="background: rgba(239,98,159,0.2);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5.678 19l-1.241 1.241 1.414 1.414 1.243-1.242 1.241 1.242 1.415-1.414-1.242-1.242 1.242-1.242-1.413-1.415-1.243 1.243-1.242-1.243-1.414 1.415L5.678 19zM4 4v7h7V4h2v16h-2v-7H4v7H2V4h2zm14 0v4h3v12h-3v4h2V4h-2z" fill="#EF629F"/>
+                </svg>
+              </div>
+              
+              <h4 class="approach-title gradient-text-peach">私：発想型・抽象志向</h4>
+            </div>
+            <div class="approach-content">
+              <ul>
+                <li>事実を抽象化し推論する</li>
+                <li>時間軸：未来</li>
+                <li>「将来の可能性」を重視</li>
+                <li>アイデア出し、新機能考案が得意</li>
+              </ul>
+            </div>
+          </div>
+          <div class="approach-card bg-gradient-peach">
+            <div class="approach-header">
+              <div class="approach-icon" style="background: rgba(151,8,204,0.2);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 22H4v-2a5 5 0 015-5h6a5 5 0 015 5v2zm-8-9A6 6 0 1112 7a6 6 0 010 6zm0-2a4 4 0 100-8 4 4 0 000 8z" fill="#9708CC"/>
+                </svg>
+              </div>
+              
+              <h4 class="approach-title gradient-text-neon">上司：実行型・具体志向</h4>
+            </div>
+            <div class="approach-content">
+              <ul>
+                <li>事実を観察し分析する</li>
+                <li>時間軸：現在</li>
+                <li>「現在の実現性」を重視</li>
+                <li>実行力が高い</li>
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 思考アプローチの相乗効果を図式化 -->
+        <div class="collaboration-diagram">
+          <div class="collab-element" style="background: var(--gradient-neon); color: white;">
+            <div class="collab-icon">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.873 3h14.254a1 1 0 01.809.412l3.823 5.256a.5.5 0 010 .664l-3.823 5.256a1 1 0 01-.81.412H4.873a1 1 0 01-.809-.412L.242 9.332a.5.5 0 010-.664L4.064 3.412A1 1 0 014.873 3z" fill="white"/>
+              </svg>
+            </div>
+            <div class="collab-title">上司の貢献</div>
+            <div class="collab-text">具体的な実行<br>現実的な詰め</div>
+          </div>
+          <div class="collab-plus">×</div>
+          <div class="collab-element" style="background: var(--gradient-peach); color: white;">
+            <div class="collab-icon">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.873 3h14.254a1 1 0 01.809.412l3.823 5.256a.5.5 0 010 .664l-3.823 5.256a1 1 0 01-.81.412H4.873a1 1 0 01-.809-.412L.242 9.332a.5.5 0 010-.664L4.064 3.412A1 1 0 014.873 3z" fill="white"/>
+              </svg>
+            </div>
+            <div class="collab-title">私の貢献</div>
+            <div class="collab-text">可能性を広げる<br>将来機会の発見</div>
+            
+          </div>
+          <div class="collab-equals">=</div>
+          <div class="collab-element" style="background: var(--gradient-sunset); color: white;">
+            <div class="collab-icon">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 10h7l-9 13v-9H4l9-13z" fill="white"/>
+              </svg>
+            </div>
+            <div class="collab-title">相乗効果</div>
+            <div class="collab-text">革新的かつ<br>実現可能な成果</div>
+          </div>
+        </div>
+        
+        <div class="card bg-gradient-sunset" style="border-left: 4px solid var(--color-red);margin-top: 150px;">
+          <h3 style="display: flex; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1.177-7.86l-2.765-2.767L7 12.431l3.823 3.827 7.173-7.172-1.060-1.057-7.113 7.113z" fill="#FF5E62"/>
+            </svg>
+            <span style="margin-left: 10px;">相乗効果を生み出す協業</span>
+          </h3>
+          <p>それぞれの強みを活かした役割分担で<span class="highlight">プロジェクト成果の最大化</span>が期待できます</p>
+        </div>
+      </div>
+      <div class="slide-footer">5 / 10</div>
+    </div>
+
+    <!-- スライド6: 思考アプローチの違い (時間軸) -->
+    <div class="slide" id="slide6">
+      <div class="slide-header">
+        <h1 class="slide-title">2. 思考アプローチの違い</h1>
+        <h2 class="slide-subtitle">時間軸の差：DeepSeek事例</h2>
+      </div>
+      <div class="slide-content">
+        <!-- 時間軸の差を図式化 -->
+        <div class="timeline">
+          <div class="timeline-label" style="position: absolute; transform: translateX(-50%); text-align: center; width: 100px; font-weight: 500; font-size: 14px; left: 10%; top: -40px; color: var(--color-grey);">過去</div>
+          <div class="timeline-label" style="position: absolute; transform: translateX(-50%); text-align: center; width: 100px; font-weight: 500; font-size: 14px; left: 50%; top: -40px; color: var(--color-orange);">現在</div>
+          <div class="timeline-label" style="position: absolute; transform: translateX(-50%); text-align: center; width: 100px; font-weight: 500; font-size: 14px; left: 90%; top: -40px; color: var(--color-blue);">将来</div>
+          
+          <div class="timeline-line">
+            <div class="timeline-marker" style="left: 10%; background: #f5f5f5;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 2a8 8 0 100 16 8 8 0 000-16zm3 5v2h-6V9h6z" fill="#888"/>
+              </svg>
+            </div>
+            <div class="timeline-marker" style="left: 50%; border: 3px solid var(--color-orange);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 2a8 8 0 100 16 8 8 0 000-16zm-1 3h2v6h-2V7zm0 8h2v2h-2v-2z" fill="#FF9966"/>
+              </svg>
+            </div>
+            <div class="timeline-marker" style="left: 90%; border: 3px solid var(--color-blue);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 14h5v2h-3v3h-2v-5zm-9-1h3v6H4v-2h2v-1H4v-3zm5 0h3v5h-3v-5zm11-6v5h-5V7h5zm-7 0v2H5V7h8zm8-4v3h-3V3h3zM9 3v3H4V3h5zm8 0v3h-6V3h6z" fill="#43CBFF"/>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="timeline-focus" style="left: 50%; top: 30px; background: var(--gradient-neon);">
+            <strong>上司の視点</strong><br>
+            現在の事実確認
+          </div>
+          
+          <div class="timeline-focus" style="left: 90%; top: 30px; background: var(--gradient-sunset);">
+            <strong>私の視点</strong><br>
+            将来のリスク予測
+          </div>
+        </div>
+        
+        <div class="split-content" style="flex-direction: row-reverse;">
+          <div class="column">
+            <div class="card">
+              <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--gradient-sunset);"></div>
+              <h3>
+                <div class="icon-container" style="background: rgba(255,94,98,0.1);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 14h5v2h-3v3h-2v-5zm-9-1h3v6H4v-2h2v-1H4v-3zm5 0h3v5h-3v-5zm11-6v5h-5V7h5zm-7 0v2H5V7h8zm8-4v3h-3V3h3zM9 3v3H4V3h5zm8 0v3h-6V3h6z" fill="#FF5E62"/>
+                  </svg>
+                </div>
+                私の視点：「将来のリスク」
+              </h3>
+              <ul>
+                <li>「DeepSeekがDDoSくらったニュース」</li>
+                <li>「社員が将来アプリを使う可能性」</li>
+                <li>「利用規約の潜在的リスク」</li>
+                <li>→ 「注意喚起したほうがいい」</li>
+              </ul>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--gradient-neon);"></div>
+              <h3>
+                <div class="icon-container" style="background:rgba(151,8,204,0.1) ;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z" fill="#9708CC"/>
+                  </svg>
+                </div>
+                上司の視点：「現在の事実」
+              </h3>
+              <ul>
+                <li>「DDoSじゃなく利用者増加によるサーバダウン」</li>
+                <li>「今使ってる人はいない」</li>
+                <li>「規約が危ないエビデンスは？」</li>
+                <li>→ 現状の事実確認を優先</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card bg-gradient-sunset" style="border-left: 4px solid var(--color-red);margin-top: 150px;">
+          <h3 style="display: flex; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-5v2h2v-2h-2zm0-10v8h2V7h-2z" fill="#FF5E62"/>
+            </svg>
+            <span style="margin-left: 10px;">お願い：時間軸・具体/抽象の違いを意識した協業</span>
+          </h3>
+          <p>私の「将来予測」を<span class="highlight">「エビデンスのない無価値な話」ではなく</span>、<br><span class="highlight">「未来軸の抽象的な目標設定のための話」</span>として捉えていただきたい</p>
+          <p>AIプロジェクトでも、将来の可能性やリスクを考慮することで、コストカット以上の成果が期待できます</p>
+        </div>
+      </div>
+      <div class="slide-footer">6 / 10</div>
+    </div>
+
+    <!-- スライド7: AI観 -->
+    <div class="slide" id="slide7">
+      <div class="slide-header">
+        <h1 class="slide-title">3. 最近のAI観</h1>
+        <h2 class="slide-subtitle">新しい可能性への視点</h2>
+      </div>
+      <div class="slide-content">
+        <h3 style="display: flex; align-items: center; margin-top: 10px;" class="gradient-text-sunset">
+          <svg width="24" height="24" style="margin-right: 10px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11H7v2h4v4h2v-4h4v-2h-4V7h-2v4z" fill="#FF5E62"/>
+          </svg>
+          現時点でのAI観
+        </h3>
+        <ul>
+          <li>AIはコストカットだけでなく、<span class="highlight">新しい可能性を広げるもの</span></li>
+          <li>AIプロジェクトを通じてこの価値観を示したい</li>
+        </ul>
+        
+        <!-- AI観を図式化 -->
+        <div class="ai-evolution">
+          <div class="ai-stage" style="border-left: 5px solid var(--color-orange);">
+            <div class="ai-header">
+              <div class="ai-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 7V4a1 1 0 00-1-1H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1v-6a1 1 0 00-1-1h-3v3H5V5h3v2h3zm10 7v-3.5l-3.5 3.5-3.5-3.5V14l3.5 3.5L21 14z" fill="#FF9966"/>
+                </svg>
+              </div>
+              <h4 class="ai-title gradient-text-sunset">従来のAI観</h4>
+            </div>
+            <div class="ai-content">
+              <ul>
+                <li>コスト削減</li>
+                <li>業務効率化</li>
+                <li>自動化</li>
+                <li>人員削減</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="ai-arrow">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2h12.172z" fill="#8B8B9A"/>
+            </svg>
+          </div>
+          
+          <div class="ai-stage" style="border-left: 5px solid var(--color-blue);">
+            <div class="ai-header">
+              <div class="ai-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13 10h7l-9 13v-9H4l9-13z" fill="#43CBFF"/>
+                </svg>
+              </div>
+              <h4 class="ai-title gradient-text-neon">目指すAI観</h4>
+            </div>
+            <div class="ai-content">
+              <ul>
+                <li>コスト削減 + <strong class="gradient-text-sunset">新しい価値創造</strong></li>
+                <li>効率化 + <strong class="gradient-text-sunset">ユーザー体験向上</strong></li>
+                <li>自動化 + <strong class="gradient-text-neon">人間の創造性拡張</strong></li>
+                <li>人員削減 → <strong class="gradient-text-peach">人材の価値向上</strong></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card bg-gradient-neon" style="border-left: 4px solid var(--color-blue);">
+          <h3 style="display: flex; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 17h2v2H2v-2h2v-7a8 8 0 1116 0v7zm-2 0v-7a6 6 0 10-12 0v7h12zm-9 4h6v2H9v-2z" fill="#43CBFF"/>
+            </svg>
+            <span style="margin-left: 10px;">詳細はレクチャー会後に</span>
+          </h3>
+          <ul>
+            <li>具体的なデータや事例を揃えて相談したい</li>
+            <li>AIの可能性とリスクを包括的に把握した上で議論を深めたい</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">7 / 10</div>
+    </div>
+
+    <!-- スライド8: キャリア展望 -->
+    <div class="slide" id="slide8">
+      <div class="slide-header">
+        <h1 class="slide-title">3. 今後のキャリア展望</h1>
+        <h2 class="slide-subtitle">AI価値創出を軸としたビジョン</h2>
+      </div>
+      <div class="slide-content">        
+        <!-- キャリア展望を図式化 -->
+        <div class="career-path">
+          <div class="career-stage">
+            <div class="career-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zM10.622 8.415l4.879 3.252a.4.4 0 01.15.547l-4.142 6.213a.4.4 0 01-.548.15l-.737-.492a.4.4 0 01-.15-.547l3.247-4.87-3.398-2.266a.4.4 0 01-.15-.547l.492-.737a.4.4 0 01.547-.15l.01.006-.01-.006z" fill="#43CBFF"/>
+              </svg>
+            </div>
+            <div class="career-title gradient-text-neon">短期（〜1年）</div>
+            <div class="career-content">
+              <p>AIプロジェクトを成功に導く</p>
+              <p>会社内でAIの価値を実証する</p>
+              <p>五來などの人材育成</p>
+            </div>
+            <div class="career-accent" style="background: var(--gradient-neon);"></div>
+          </div>
+          
+          <div class="career-stage">
+            <div class="career-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 22H4v-2a5 5 0 015-5h6a5 5 0 015 5v2zm-8-9a6 6 0 100-12 6 6 0 000 12z" fill="#FF9966"/>
+              </svg>
+            </div>
+            <div class="career-title gradient-text-sunset">中期（1〜2年）</div>
+            <div class="career-content">
+              <p>新機能案（12個ほど構想中）の実現</p>
+              <p>人を繋ぐ・配置する強みの活用</p>
+              <p>シェアハウス知人とのアライアンス構築</p>
+            </div>
+            <div class="career-accent" style="background: var(--gradient-sunset);"></div>
+          </div>
+          
+          <div class="career-stage">
+            <div class="career-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.873 3h14.254a1 1 0 01.809.412l3.823 5.256a.5.5 0 010 .664l-3.823 5.256a1 1 0 01-.81.412H4.873a1 1 0 01-.809-.412L.242 9.332a.5.5 0 010-.664L4.064 3.412A1 1 0 014.873 3z" fill="#EF629F"/>
+              </svg>
+            </div>
+            <div class="career-title gradient-text-peach">長期（2年〜）</div>
+            <div class="career-content">
+              <p>新規事業開発へのシフト</p>
+              <p>AIを活用した事業創出</p>
+              <p>事業創造人材としての成長</p>
+            </div>
+            <div class="career-accent" style="background: var(--gradient-peach);"></div>
+          </div>
+        </div>
+        
+        <div class="card bg-gradient-peach" style="border-left: 4px solid var(--color-purple);">
+          <h3 style="display: flex; align-items: center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 11V8l4 4-4 4v-3H8v-2h4zm0-9c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8z" fill="#9708CC"/>
+            </svg>
+            <span style="margin-left: 10px;">外部連携の可能性</span>
+          </h3>
+          <ul>
+            <li>シェアハウス知人とのアライアンス
+              <ul>
+                <li>ビジネスマンとしてのスキルが信頼できる人材</li>
+                <li>必要に応じて取締役との接点構築</li>
+              </ul>
+            </li>
+            <li>IT業界とのネットワークを活かした事業開発</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer">8 / 10</div>
+    </div>
+
+    <!-- 新規スライド9: 今後話し合いたいトピック -->
+    <div class="slide" id="slide9">
+      <div class="slide-header">
+        <h1 class="slide-title">今後話し合いたいトピック</h1>
+        <h2 class="slide-subtitle">相談テーマのグループ整理</h2>
+      </div>
+      <div class="slide-content">
+        <div style="margin-bottom: 20px;">
+          <p>今回は「AI活用プロジェクト」と「思考タイプ」を中心に話し、「AI観とキャリア」には一部触れました。<br>今後話し合いたいテーマは以下のようにグループ化できます。</p>
+        </div>
+        
+        <div class="topic-groups">
+          <!-- AIの活用と可能性 -->
+          <div class="topic-group">
+            <div class="topic-header bg-gradient-neon">
+              <div class="topic-icon" style="background: var(--gradient-neon);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zM10.622 8.415l4.879 3.252a.4.4 0 01.15.547l-4.142 6.213a.4.4 0 01-.548.15l-.737-.492a.4.4 0 01-.15-.547l3.247-4.87-3.398-2.266a.4.4 0 01-.15-.547l.492-.737a.4.4 0 01.547-.15l.01.006-.01-.006z" fill="white"/>
+                </svg>
+              </div>
+              <h4 class="topic-title">AIの活用と可能性</h4>
+            </div>
+            <div class="topic-items">
+              <div class="topic-item">
+                <span>AI活用プロジェクトの現状と提案</span>
+                <span class="topic-status status-done">済み</span>
+              </div>
+              <div class="topic-item">
+                <span>最近のAI観</span>
+                <span class="topic-status status-partial">一部済み</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 思考タイプと協働 -->
+          <div class="topic-group">
+            <div class="topic-header bg-gradient-peach">
+              <div class="topic-icon" style="background: var(--gradient-peach);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5.678 19l-1.241 1.241 1.414 1.414 1.243-1.242 1.241 1.242 1.415-1.414-1.242-1.242 1.242-1.242-1.413-1.415-1.243 1.243-1.242-1.243-1.414 1.415L5.678 19zM4 4v7h7V4h2v16h-2v-7H4v7H2V4h2zm14 0v4h3v12h-3v4h2V4h-2z" fill="white"/>
+                </svg>
+              </div>
+              <h4 class="topic-title">思考タイプと協働</h4>
+            </div>
+            <div class="topic-items">
+              <div class="topic-item">
+                <span>上司と私の思考タイプの違い</span>
+                <span class="topic-status status-done">済み</span>
+              </div>
+              <div class="topic-item">
+                <span>思考タイプとB2B/B2Cの相性</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- B2Cと事業戦略 -->
+          <div class="topic-group">
+            <div class="topic-header bg-gradient-sunset">
+              <div class="topic-icon" style="background: var(--gradient-sunset);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 10h18v10.004c0 .55-.445.996-.993.996H3.993A.994.994 0 013 20.004V10zm6-2V3.997C9 3.447 9.445 3 9.993 3h4.014c.548 0 .993.447.993.997V8h5a1 1 0 011 1v1H3V9a1 1 0 011-1h5zm1 0h4V4h-4v4z" fill="white"/>
+                </svg>
+              </div>
+              <h4 class="topic-title">B2Cと事業戦略</h4>
+            </div>
+            <div class="topic-items">
+              <div class="topic-item">
+                <span>B2BとB2Cの違いと課題</span>
+              </div>
+              <div class="topic-item">
+                <span>B2CにおけるUXとマーケティングの重要性</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 私の能力とキャリア -->
+          <div class="topic-group">
+            <div class="topic-header bg-gradient-neon">
+              <div class="topic-icon" style="background: var(--gradient-neon);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 22a8 8 0 1116 0h-2a6 6 0 10-12 0H4zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z" fill="white"/>
+                </svg>
+              </div>
+              <h4 class="topic-title">私の能力とキャリア</h4>
+            </div>
+            <div class="topic-items">
+              <div class="topic-item">
+                <span>私の創造力と問題解決能力</span>
+              </div>
+              <div class="topic-item">
+                <span>今後のキャリアについて</span>
+                <span class="topic-status status-partial">一部済み</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 会社と働き方の未来 -->
+          <div class="topic-group">
+            <div class="topic-header bg-gradient-peach">
+              <div class="topic-icon" style="background: var(--gradient-peach);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 20h2v2H1v-2h2V3a1 1 0 011-1h16a1 1 0 011 1v17zm-2 0V4H5v16h14zM8 11h8v2H8v-2zm0-4h8v2H8V7zm0 8h5v2H8v-2z" fill="white"/>
+                </svg>
+              </div>
+              <h4 class="topic-title">会社と働き方の未来</h4>
+            </div>
+            <div class="topic-items">
+              <div class="topic-item">
+                <span>AIによる働き方の変革</span>
+              </div>
+              <div class="topic-item">
+                <span>会社への意見と未来像</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+       
+      
+    </div>
+    <div class="slide-footer">9 / 10</div>
+  </div>
+
+  <!-- スライド10: まとめ -->
+  <div class="slide" id="slide10">
+    <div class="slide-header">
+      <h1 class="slide-title">まとめ</h1>
+      <h2 class="slide-subtitle">相談内容と今後のステップ</h2>
+    </div>
+    <div class="slide-content">
+      <div class="card" style="border-left: 4px solid var(--color-blue);">
+        <h3 style="display: flex; align-items: center;" class="gradient-text-neon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 3.993A1 1 0 012.992 3h18.016c.548 0 .992.445.992.993v16.014a1 1 0 01-.992.993H2.992A.993.993 0 012 20.007V3.993zM4 5v14h16V5H4zm2 2h6v6H6V7zm2 2v2h2V9H8zm-2 8h12v2H6v-2zm8-8h4v2h-4V9zm0 4h4v2h-4v-2z" fill="#43CBFF"/>
+          </svg>
+          <span style="margin-left: 10px;">1. AIプロジェクト</span>
+        </h3>
+        <ul>
+          <li>レクチャー会実施でプロジェクト方針の幅を広げる</li>
+          <li>午後０來の活用で人材育成とプロジェクト成果の向上</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="border-left: 4px solid var(--color-orange);">
+        <h3 style="display: flex; align-items: center;" class="gradient-text-sunset">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 22H4v-2a5 5 0 015-5h6a5 5 0 015 5v2zm-8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6z" fill="#FF9966"/>
+          </svg>
+          <span style="margin-left: 10px;">2. 思考アプローチの違い</span>
+        </h3>
+        <ul>
+          <li>発想型（可能性志向）と実行型（具体志向）の強みを活かした協業</li>
+          <li>時間軸の違いを認識し、将来予測を「成果に繋がる視点」として捉える</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="border-left: 4px solid var(--color-purple);">
+        <h3 style="display: flex; align-items: center;" class="gradient-text-peach">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 10h7l-9 13v-9H4l9-13z" fill="#9708CC"/>
+          </svg>
+          <span style="margin-left: 10px;">3. AI観とキャリア</span>
+        </h3>
+        <ul>
+          <li>AIを通じた新しい価値創造と事業開発へのシフト</li>
+          <li>短期・中期・長期のキャリアビジョンの明確化</li>
+        </ul>
+      </div>
+      
+      
+    </div>
+    <div class="slide-footer">10 / 10</div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="control-btn" id="prevBtn" disabled>前へ</button>
+  <button class="control-btn" id="nextBtn">次へ</button>
+</div>
+
+<script>
+  let currentSlide = 1;
+  const totalSlides = 10;
+  
+  function showSlide(slideNumber) {
+    // すべてのスライドを非表示
+    document.querySelectorAll('.slide').forEach(slide => {
+      slide.classList.remove('active');
+    });
+    
+    // 指定したスライドを表示
+    document.getElementById('slide' + slideNumber).classList.add('active');
+    
+    // ボタンの状態更新
+    document.getElementById('prevBtn').disabled = (slideNumber === 1);
+    document.getElementById('nextBtn').disabled = (slideNumber === totalSlides);
+    
+    currentSlide = slideNumber;
+  }
+  
+  // イベントリスナー設定
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentSlide > 1) {
+      showSlide(currentSlide - 1);
+    }
+  });
+  
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentSlide < totalSlides) {
+      showSlide(currentSlide + 1);
+    }
+  });
+  
+  // キーボードイベント
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' && currentSlide > 1) {
+      showSlide(currentSlide - 1);
+    } else if (e.key === 'ArrowRight' && currentSlide < totalSlides) {
+      showSlide(currentSlide + 1);
+    }
+  });
+</script>
+</body>
+</html>
+          
